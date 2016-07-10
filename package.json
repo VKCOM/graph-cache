@@ -1,0 +1,17 @@
+{
+  "name": "graph-cache",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./tests/**/*",
+    "test-watch": "mocha ./tests/**/* -w"
+  },
+  "author": "Termina1",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
+    "mocha": "^2.5.3"
+  }
+}
