@@ -1,16 +1,14 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const {loadTestFile, testSign, testGraph, verifyGraph} = require('../utils/test_utils');
+const { loadTestFile, testSign, testGraph, verifyGraph } = require('../utils/test_utils');
 
 chai.use(chaiAsPromised);
-const {expect} = chai;
 
-
-const {updateGraph} = require('../../lib/update_graph');
+const { updateGraph } = require('../../lib/update_graph');
 
 function getSimpleGraph(name, file, sign) {
   const g = testGraph();
-  g.setNode(name, sign(file))
+  g.setNode(name, sign(file));
   return g;
 }
 
@@ -22,45 +20,44 @@ function get2NodeGraph(name1, file1, name2, file2, sign) {
 }
 
 describe('updateGraph', () => {
-
-  it('does not chang graph, if nothing was changed', () => {
-    return loadTestFile('test.txt').then(([file, name]) => {
+  it('does not chang graph, if nothing was changed', () =>
+    loadTestFile('test.txt').then(([file, name]) => {
       const g = getSimpleGraph(name, file, testSign);
-      return updateGraph(g, testSign, function(sign, file, name) {
-        return Promise.resolve(getSimpleGraph(name, file, sign));
-      }, file, name).then(g => {
-        verifyGraph(g, [['test.txt', testSign(file)]], []);
-      });
-    });
-  });
+      return updateGraph(g, testSign, (sign, tfile, tname) =>
+        Promise.resolve(getSimpleGraph(tname, tfile, sign))
+      , file, name).then(ng =>
+        verifyGraph(ng, [['test.txt', testSign(file)]], [])
+      );
+    })
+  );
 
-  it('changes node signature if it changed', () => {
-    return loadTestFile('test.txt').then(([file, name]) => {
+  it('changes node signature if it changed', () =>
+    loadTestFile('test.txt').then(([file, name]) => {
       const nwsig = testSign(file) + 1;
       const g = getSimpleGraph(name, file, testSign);
-      return updateGraph(g, testSign, function(sign, file, name) {
-        const nwg = getSimpleGraph(name, file, sign);
+      return updateGraph(g, testSign, (sign, tfile, tname) => {
+        const nwg = getSimpleGraph(tname, tfile, sign);
         nwg.setNode(name, nwsig);
         return Promise.resolve(nwg);
-      }, file, name).then(g => {
-        verifyGraph(g, [['test.txt', nwsig]], []);
+      }, file, name).then(ng => {
+        verifyGraph(ng, [['test.txt', nwsig]], []);
       });
-    });
-  });
+    })
+  );
 
   it('adds new node if it appeared in graph', () => {
     const files = ['test.txt', 'test2.txt'].map(loadTestFile);
     return Promise.all(files).then(([[file1, name1], [file2, name2]]) => {
       const g = getSimpleGraph(name1, file1, testSign);
-      return updateGraph(g, testSign, function(sign, file, name) {
-        const nwg = get2NodeGraph(name1, file1, name2, file2, sign);
+      return updateGraph(g, testSign, (sign, tfile, tname) => {
+        const nwg = get2NodeGraph(tname, tfile, name2, file2, sign);
         return Promise.resolve(nwg);
-      }, file1, name1).then(g => {
-        verifyGraph(g, [
+      }, file1, name1).then(ng => {
+        verifyGraph(ng, [
           ['test.txt', testSign(file1)],
-          ['test2.txt', testSign(file2)]
+          ['test2.txt', testSign(file2)],
         ], [
-          { v: 'test2.txt', w: 'test.txt' }
+          { v: 'test2.txt', w: 'test.txt' },
         ]);
       });
     });
@@ -70,12 +67,12 @@ describe('updateGraph', () => {
     const files = ['test.txt', 'test2.txt'].map(loadTestFile);
     return Promise.all(files).then(([[file1, name1], [file2, name2]]) => {
       const g = get2NodeGraph(name1, file1, name2, file2, testSign);
-      return updateGraph(g, testSign, function(sign, file, name) {
+      return updateGraph(g, testSign, (sign) => {
         const nwg = getSimpleGraph(name1, file1, sign);
         return Promise.resolve(nwg);
-      }, file1, name1).then(g => {
-        verifyGraph(g, [
-          ['test.txt', testSign(file1)]
+      }, file1, name1).then(ng => {
+        verifyGraph(ng, [
+          ['test.txt', testSign(file1)],
         ], []);
       });
     });
@@ -85,18 +82,17 @@ describe('updateGraph', () => {
     const files = ['test.txt', 'test2.txt'].map(loadTestFile);
     return Promise.all(files).then(([[file1, name1], [file2, name2]]) => {
       const g = get2NodeGraph(name1, file1, name2, file2, testSign);
-      return updateGraph(g, testSign, function(sign, file, name) {
-        const nwg = get2NodeGraph(name2, file2, name1, file1, testSign);
+      return updateGraph(g, testSign, (sign) => {
+        const nwg = get2NodeGraph(name2, file2, name1, file1, sign);
         return Promise.resolve(nwg);
-      }, file1, name1).then(g => {
-        verifyGraph(g, [
+      }, file1, name1).then(ng => {
+        verifyGraph(ng, [
           ['test.txt', testSign(file1)],
-          ['test2.txt', testSign(file2)]
+          ['test2.txt', testSign(file2)],
         ], [
-          { v: 'test.txt', w: 'test2.txt' }
+          { v: 'test.txt', w: 'test2.txt' },
         ]);
       });
     });
   });
-
 });
