@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./tests/**/*",
-    "test-watch": "mocha ./tests/**/* -w"
+    "test": "mocha ./tests/lib/*.js -A",
+    "test-watch": "mocha ./tests/lib/*.js -w -A"
   },
   "author": "Termina1",
   "license": "MIT",
@@ -13,5 +13,11 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
     "mocha": "^2.5.3"
+  },
+  "dependencies": {
+    "graphlib": "^2.1.0",
+    "lodash.difference": "^4.3.0",
+    "lodash.differenceby": "^4.6.0",
+    "object-assign": "^4.1.0"
   }
 }
