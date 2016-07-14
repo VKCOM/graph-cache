@@ -37,6 +37,18 @@ describe('checkFileCache', () => {
     })
   );
 
+  it('returns false if some deps are missing', () =>
+    loadTestFile('1.txt').then(([file, filename]) => {
+      const sign = testSign(file);
+      const g = testGraph();
+      g.setNode(filename, sign);
+      g.setNode('some-file', 2);
+      g.setEdge('some-file', filename);
+      return expect(checkFileCache(g, testSign, file, filename))
+        .eventually.eql(['some-file']);
+    })
+  );
+
   it('returns false if file has one dep and signatures do not match', () => {
     const files = Promise.all([loadTestFile('1.txt'), loadTestFile('2.txt')]);
     return files.then(([[file1, filename1], [file2, filename2]]) => {
