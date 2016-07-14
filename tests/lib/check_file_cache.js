@@ -10,7 +10,7 @@ const { checkFileCache } = require('../../lib/check_file_cache');
 
 describe('checkFileCache', () => {
   it('returns false if cache is cold', () =>
-    loadTestFile('test.txt').then(([file, filename]) => {
+    loadTestFile('1.txt').then(([file, filename]) => {
       const g = testGraph();
       return expect(checkFileCache(g, testSign, file, filename))
         .eventually.to.eql([filename]);
@@ -18,7 +18,7 @@ describe('checkFileCache', () => {
   );
 
   it('returns false if file has no deps and signatures do not match', () =>
-    loadTestFile('test.txt').then(([file, filename]) => {
+    loadTestFile('1.txt').then(([file, filename]) => {
       const g = testGraph();
       g.setNode(filename, 0);
       return expect(checkFileCache(g, testSign, file, filename))
@@ -28,7 +28,7 @@ describe('checkFileCache', () => {
 
 
   it('returns true if file has no deps and signatures match', () =>
-    loadTestFile('test.txt').then(([file, filename]) => {
+    loadTestFile('1.txt').then(([file, filename]) => {
       const sign = testSign(file);
       const g = testGraph();
       g.setNode(filename, sign);
@@ -38,7 +38,7 @@ describe('checkFileCache', () => {
   );
 
   it('returns false if file has one dep and signatures do not match', () => {
-    const files = Promise.all([loadTestFile('test.txt'), loadTestFile('test2.txt')]);
+    const files = Promise.all([loadTestFile('1.txt'), loadTestFile('2.txt')]);
     return files.then(([[file1, filename1], [file2, filename2]]) => {
       const g = testGraph();
       g.setNode(filename1, testSign(file1));
@@ -50,7 +50,7 @@ describe('checkFileCache', () => {
   });
 
   it('returns true if file has one dep and signatures match', () => {
-    const files = Promise.all([loadTestFile('test.txt'), loadTestFile('test2.txt')]);
+    const files = Promise.all([loadTestFile('1.txt'), loadTestFile('2.txt')]);
     return files.then(([[file1, filename1], [file2, filename2]]) => {
       const g = testGraph();
       g.setNode(filename1, testSign(file1));

@@ -24,9 +24,8 @@ function verifyGraph(g, vertexList, edgeList = []) {
   let nodes = g.nodes().sort().map(node => [node, g.node(node)]);
   let edges = g.edges().sort((a, b) => a.v <= b.v);
 
-  edgeList = edgeList.map(e => ({ v: createPath(e.v), w: createPath(e.w) }))
-    .sort((a, b) => a.v <= b.v);
-  vertexList = vertexList.map((node) => [createPath(node[0]), node[1]]).sort();
+  edgeList = edgeList.sort((a, b) => a.v <= b.v);
+  vertexList = vertexList.sort();
 
   expect(nodes).to.eql(vertexList);
   expect(edges).to.eql(edgeList);
@@ -36,5 +35,6 @@ module.exports = {
   loadTestFile,
   testSign,
   testGraph,
-  verifyGraph
+  verifyGraph,
+  createPath,
 }
