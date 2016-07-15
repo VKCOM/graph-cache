@@ -52,6 +52,19 @@ describe('updateGraph', () => {
     )
   );
 
+  it('adds single node to empty graph', () =>
+    loadFiles(1).then(([[file, name]]) => {
+      const g = testGraph();
+      return updateGraph(g, testSign, () => {
+        const nwg = testGraph();
+        nwg.setNode(name, testSign(file));
+        return Promise.resolve(nwg);
+      }, file, getName(1)).then((nwg) => verifyGraph(nwg, [
+        [name, testSign(file)],
+      ], []));
+    })
+  );
+
   it('adds new node if it appeared in graph', () =>
     loadFiles(4).then(([[file4, name4]]) =>
       load3Graph(true).then(([g, files, names]) =>

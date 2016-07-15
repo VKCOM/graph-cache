@@ -51,7 +51,9 @@ function walkTogether(nwg, g, leafs) {
       g.removeNode(leaf);
     } else if (!g.node(leaf)) {
       g.setNode(leaf, nwg.node(leaf));
-      g.setEdge(leaf, parent);
+      if (parent !== null) {
+        g.setEdge(leaf, parent);
+      }
     } else if (nwg.node(leaf) !== g.node(leaf)) {
       g.setNode(leaf, nwg.node(leaf));
       updateEdges(g, nwg, leaf);
