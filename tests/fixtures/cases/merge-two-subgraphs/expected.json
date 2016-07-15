@@ -1,0 +1,87 @@
+{
+  "options": {
+    "directed": true,
+    "multigraph": false,
+    "compound": false
+  },
+  "nodes": [
+    {
+      "v": "prev",
+      "value": 2344443119
+    },
+    {
+      "v": "static/css/lib/common-lib.less",
+      "value": 2789251010
+    },
+    {
+      "v": "static/css/lib/static-versions.less",
+      "value": 3484154395
+    },
+    {
+      "v": "static/css/lib/common-vars.less",
+      "value": 734255052
+    },
+    {
+      "v": "static/css/lib/text-vars.less",
+      "value": 2844123400
+    },
+    {
+      "v": "static/css/lib/color-vars.less",
+      "value": 3668852263
+    },
+    {
+      "v": "static/css/lib/ui-dropdown-vars.less",
+      "value": 175258981
+    },
+    {
+      "v": "static/css/lib/ui-common-vars.less",
+      "value": 235180293
+    },
+    {
+      "v": "static/css/lib/admin/common-vars.less",
+      "value": 3714746171
+    },
+    {
+      "v": "start",
+      "value": 3329216354
+    }
+  ],
+  "edges": [
+    {
+      "v": "static/css/lib/common-lib.less",
+      "w": "prev"
+    },
+    {
+      "v": "static/css/lib/static-versions.less",
+      "w": "static/css/lib/common-lib.less"
+    },
+    {
+      "v": "static/css/lib/common-vars.less",
+      "w": "static/css/lib/common-lib.less"
+    },
+    {
+      "v": "static/css/lib/text-vars.less",
+      "w": "static/css/lib/common-vars.less"
+    },
+    {
+      "v": "static/css/lib/color-vars.less",
+      "w": "static/css/lib/common-vars.less"
+    },
+    {
+      "v": "static/css/lib/ui-dropdown-vars.less",
+      "w": "static/css/lib/common-vars.less"
+    },
+    {
+      "v": "static/css/lib/ui-common-vars.less",
+      "w": "static/css/lib/common-vars.less"
+    },
+    {
+      "v": "static/css/lib/common-lib.less",
+      "w": "start"
+    },
+    {
+      "v": "static/css/lib/admin/common-vars.less",
+      "w": "start"
+    }
+  ]
+}

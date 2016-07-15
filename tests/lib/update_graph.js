@@ -11,8 +11,13 @@ const {
   getName,
   loadFiles,
 } = require('../utils/test_utils');
+const { loadFile } = require('../../lib/file_process');
+const fs = require('fs');
+const path = require('path');
+const { json } = require('graphlib');
 
 chai.use(chaiAsPromised);
+const { assert } = chai;
 
 const { updateGraph } = require('../../lib/update_graph');
 
@@ -146,4 +151,33 @@ describe('updateGraph', () => {
         .then(nwg => verifyGraph(nwg, [], []))
     )
   );
+
+  const fixturesDir = 'tests/fixtures/cases';
+
+  function compareGraphs(g, nwg) {
+    const nodes1 = g.nodes().sort().map(node => [node, g.node(node)]);
+    const nodes2 = nwg.nodes().sort().map(node => [node, g.node(node)]);
+    const edges1 = g.edges().sort((a, b) => a.v <= b.v);
+    const edges2 = nwg.edges().sort((a, b) => a.v <= b.v);
+    assert.deepEqual(nodes1, nodes2, 'nodes are equal');
+    assert.deepEqual(edges1, edges2, 'edges are equal');
+  }
+
+  fs.readdirSync(fixturesDir).forEach(caseName => {
+    it(`should ${caseName.replace(/-/ig, ' ')}`, () => {
+      const fixtureDir = path.join(fixturesDir, caseName);
+      const source = path.join(fixtureDir, 'graph.json');
+      const subgraph = path.join(fixtureDir, 'subgraph.json');
+      const expected = path.join(fixtureDir, 'expected.json');
+      return Promise.all([source, subgraph, expected].map(loadFile))
+        .then(([[sf], [sbf], [ef]]) => {
+          const g = json.read(JSON.parse(sf));
+          const sg = json.read(JSON.parse(sbf));
+          const eg = json.read(JSON.parse(ef));
+
+          return updateGraph(g, testSign, () => Promise.resolve(sg), '', 'start')
+            .then(nwg => compareGraphs(eg, nwg));
+        });
+    });
+  });
 });
