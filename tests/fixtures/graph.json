@@ -1,0 +1,39 @@
+{
+    "options": {
+        "directed": true,
+        "multigraph": false,
+        "compound": false
+    },
+    "nodes": [
+        {
+            "v": "tests/fixtures/1.txt",
+            "value": 13
+        },
+        {
+            "v": "tests/fixtures/2.txt",
+            "value": 4
+        },
+        {
+            "v": "tests/fixtures/3.txt",
+            "value": 9
+        },
+        {
+            "v": "tests/fixtures/4.txt",
+            "value": 13
+        }
+    ],
+    "edges": [
+        {
+            "v": "tests/fixtures/2.txt",
+            "w": "tests/fixtures/1.txt"
+        },
+        {
+            "v": "tests/fixtures/2.txt",
+            "w": "tests/fixtures/3.txt"
+        },
+        {
+            "v": "tests/fixtures/4.txt",
+            "w": "tests/fixtures/1.txt"
+        }
+    ]
+}

@@ -1,10 +1,13 @@
-const fs = require('fs');
 const Graph = require('graphlib').Graph;
-const {loadFile} = require('../../lib/file_process');
-const {expect} = require('chai');
+const { loadFile } = require('../../lib/file_process');
+const { expect } = require('chai');
 
 function testSign(file) {
   return file.length;
+}
+
+function createPath(name) {
+  return `tests/fixtures/${name}`;
 }
 
 function loadTestFile(name) {
@@ -16,19 +19,71 @@ function testGraph() {
   return new Graph({ directed: true });
 }
 
-function createPath(name) {
-  return `tests/fixtures/${name}`;
+function verifyGraph(g, vertexList, edgeList = []) {
+  const nodes = g.nodes().sort().map(node => [node, g.node(node)]);
+  const edges = g.edges().sort((a, b) => a.v <= b.v);
+  expect(nodes).to.eql(vertexList.sort());
+  expect(edges).to.eql(edgeList.sort((a, b) => a.v <= b.v));
 }
 
-function verifyGraph(g, vertexList, edgeList = []) {
-  let nodes = g.nodes().sort().map(node => [node, g.node(node)]);
-  let edges = g.edges().sort((a, b) => a.v <= b.v);
+function loadFiles(...files) {
+  return Promise.all(files.map(el => loadTestFile(`${el.toString()}.txt`)));
+}
 
-  edgeList = edgeList.sort((a, b) => a.v <= b.v);
-  vertexList = vertexList.sort();
+function getName(num) {
+  return createPath(`${num.toString()}.txt`);
+}
 
-  expect(nodes).to.eql(vertexList);
-  expect(edges).to.eql(edgeList);
+function load2Graph(info = false) {
+  return loadFiles(1, 2).then(([[file1, name1], [file2, name2]]) => {
+    const g = testGraph();
+    g.setNode(name1, testSign(file1));
+    g.setNode(name2, testSign(file2));
+    g.setEdge(name2, name1);
+    if (info) {
+      return [g, [file1, file2], [name1, name2]];
+    }
+    return g;
+  });
+}
+
+function load3Graph(info = false) {
+  return load2Graph(true).then(([g, files, names]) =>
+    loadFiles(3).then(([[file, name]]) => {
+      g.setNode(name, testSign(file));
+      g.setEdge(getName(2), name);
+      if (info) {
+        return [g, files.concat([file]), names.concat(name)];
+      }
+      return g;
+    })
+  );
+}
+
+function load3Graph4(info = false) {
+  return load2Graph(true).then(([g, files, names]) =>
+    loadFiles(4).then(([[file, name]]) => {
+      g.setNode(name, testSign(file));
+      g.setEdge(name, getName(1));
+      if (info) {
+        return [g, files.concat([file]), names.concat(name)];
+      }
+      return g;
+    })
+  );
+}
+
+function load4Graph(info = false) {
+  return load3Graph(true).then(([g, files, names]) =>
+    loadFiles(4).then(([[file, name]]) => {
+      g.setNode(name, testSign(file));
+      g.setEdge(name, getName(1));
+      if (info) {
+        return [g, files.concat(file), names.concat(name)];
+      }
+      return g;
+    })
+  );
 }
 
 module.exports = {
@@ -37,4 +92,10 @@ module.exports = {
   testGraph,
   verifyGraph,
   createPath,
-}
+  load4Graph,
+  load3Graph4,
+  load3Graph,
+  load2Graph,
+  getName,
+  loadFiles,
+};

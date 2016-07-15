@@ -1,72 +1,20 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const { loadTestFile, testSign, testGraph,
-  verifyGraph, createPath } = require('../utils/test_utils');
+const {
+  testSign,
+  testGraph,
+  verifyGraph,
+  load4Graph,
+  load3Graph4,
+  load3Graph,
+  load2Graph,
+  getName,
+  loadFiles,
+} = require('../utils/test_utils');
 
 chai.use(chaiAsPromised);
 
 const { updateGraph } = require('../../lib/update_graph');
-
-function loadFiles(...files) {
-  return Promise.all(files.map(el => loadTestFile(`${el.toString()}.txt`)));
-}
-
-function getName(num) {
-  return createPath(`${num.toString()}.txt`);
-}
-
-
-function load2Graph(info = false) {
-  return loadFiles(1, 2).then(([[file1, name1], [file2, name2]]) => {
-    const g = testGraph();
-    g.setNode(name1, testSign(file1));
-    g.setNode(name2, testSign(file2));
-    g.setEdge(name2, name1);
-    if (info) {
-      return [g, [file1, file2], [name1, name2]];
-    }
-    return g;
-  });
-}
-
-function load3Graph(info = false) {
-  return load2Graph(true).then(([g, files, names]) =>
-    loadFiles(3).then(([[file, name]]) => {
-      g.setNode(name, testSign(file));
-      g.setEdge(getName(2), name);
-      if (info) {
-        return [g, files.concat([file]), names.concat(name)];
-      }
-      return g;
-    })
-  );
-}
-
-function load3Graph4(info = false) {
-  return load2Graph(true).then(([g, files, names]) =>
-    loadFiles(4).then(([[file, name]]) => {
-      g.setNode(name, testSign(file));
-      g.setEdge(name, getName(1));
-      if (info) {
-        return [g, files.concat([file]), names.concat(name)];
-      }
-      return g;
-    })
-  );
-}
-
-function load4Graph(info = false) {
-  return load3Graph(true).then(([g, files, names]) =>
-    loadFiles(4).then(([[file, name]]) => {
-      g.setNode(name, testSign(file));
-      g.setEdge(name, getName(1));
-      if (info) {
-        return [g, files.concat(file), names.concat(name)];
-      }
-      return g;
-    })
-  );
-}
 
 describe('updateGraph', () => {
   it('does not change graph, if nothing was changed', () =>
