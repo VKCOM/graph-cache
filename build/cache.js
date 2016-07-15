@@ -28,6 +28,7 @@ var _require5 = require('./graph_utils');
 
 var getDependantLeafs = _require5.getDependantLeafs;
 
+var fs = require('fs');
 
 function createCacheGraph(parser, sign, opts) {
   var copts = assign({}, {
@@ -68,6 +69,21 @@ function createCacheGraph(parser, sign, opts) {
         return checkFileCache(gopts.g, sign, file, filename).then(function (changed) {
           return getDependantLeafs(gopts.g, changed, []);
         });
+      },
+      saveGraph: function saveGraph() {
+        if (gopts.persistence) {
+          return new Promise(function (resolve, reject) {
+            fs.writeFile(gopts.persistence, json.write(gopts.g), function (err) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve();
+              }
+            });
+          });
+        }
+
+        return Promise.resolve();
       },
       swapGraphs: function swapGraphs() {
         gopts.g = gopts.next;
