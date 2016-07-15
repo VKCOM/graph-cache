@@ -21,8 +21,8 @@ function ensureConnectivity(g, nwg, leafs) {
 }
 
 function updateEdges(g, nwg, leaf) {
-  var oldEdges = g.inEdges(leaf);
-  var newEdges = nwg.inEdges(leaf);
+  var oldEdges = g.inEdges(leaf) || [];
+  var newEdges = nwg.inEdges(leaf) || [];
   var removedEdges = diff(oldEdges, newEdges, function (el) {
     return el.v + '__' + el.w;
   });
@@ -54,6 +54,7 @@ function walkTogether(nwg, g, leafs) {
       if (parent !== null) {
         g.setEdge(leaf, parent);
       }
+      updateEdges(g, nwg, leaf);
     } else if (nwg.node(leaf) !== g.node(leaf)) {
       g.setNode(leaf, nwg.node(leaf));
       updateEdges(g, nwg, leaf);
