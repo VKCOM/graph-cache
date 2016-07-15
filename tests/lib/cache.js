@@ -4,6 +4,7 @@ const chaiAsPromised = require('chai-as-promised');
 const {
   verifyGraph,
   load4Graph,
+  testSign,
 } = require('../utils/test_utils');
 
 chai.use(chaiAsPromised);
@@ -15,12 +16,12 @@ const { createCacheGraph } = require('../../lib/cache');
 describe('Cache module', () => {
   describe('loading module', () => {
     it('loads if no persistence', () => {
-      const cache = createCacheGraph({});
+      const cache = createCacheGraph({}, testSign);
       expect(cache).to.eventually.be.an('object');
     });
 
     it('loads if persitence is set', () => {
-      const cachep = createCacheGraph({}, {
+      const cachep = createCacheGraph({}, testSign, {
         persistence: 'tests/fixtures/graph.json',
       });
 
@@ -35,7 +36,7 @@ describe('Cache module', () => {
     });
 
     it('loads empty graph if no persitence file is found', () =>
-      createCacheGraph({}, {
+      createCacheGraph({}, testSign, {
         persistence: 'tests/fixtures/graph111.json',
       }).then(cache => {
         const g = cache._exposeGraph();
