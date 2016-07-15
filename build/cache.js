@@ -73,7 +73,7 @@ function createCacheGraph(parser, sign, opts) {
       saveGraph: function saveGraph() {
         if (gopts.persistence) {
           return new Promise(function (resolve, reject) {
-            fs.writeFile(gopts.persistence, json.write(gopts.g), function (err) {
+            fs.writeFile(gopts.persistence, JSON.stringify(json.write(gopts.g)), function (err) {
               if (err) {
                 reject(err);
               } else {
