@@ -1,3 +1,3 @@
-const { createCacheGraph } = require('./build/cache');
+var cache = require('./build/cache');
 
-module.export = createCacheGraph;
+module.export = cache.createCacheGraph;
