@@ -86,8 +86,10 @@ function createCacheGraph(parser, sign, opts) {
         return Promise.resolve();
       },
       swapGraphs: function swapGraphs() {
-        gopts.g = gopts.next;
-        gopts.next = false;
+        if (gopts.next) {
+          gopts.g = gopts.next;
+          gopts.next = false;
+        }
       },
       _exposeGraph: function _exposeGraph() {
         return gopts.g;
