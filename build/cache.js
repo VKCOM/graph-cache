@@ -61,7 +61,10 @@ function createCacheGraph(parser, sign, opts) {
         });
       },
       rebuildFromFile: function rebuildFromFile(file, filename) {
-        return updateGraph(gopts.next || gopts.g, sign, parser, file, filename).then(function (nwg) {
+        if (!gopts.next) {
+          gopts.next = json.read(json.write(g));
+        }
+        return updateGraph(gopts.next, sign, parser, file, filename).then(function (nwg) {
           gopts.next = nwg;
         });
       },
