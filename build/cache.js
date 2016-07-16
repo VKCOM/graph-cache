@@ -62,7 +62,7 @@ function createCacheGraph(parser, sign, opts) {
       },
       rebuildFromFile: function rebuildFromFile(file, filename) {
         if (!gopts.next) {
-          gopts.next = json.read(json.write(g));
+          gopts.next = json.read(json.write(gopts.g));
         }
         return updateGraph(gopts.next, sign, parser, file, filename).then(function (nwg) {
           gopts.next = nwg;
