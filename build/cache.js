@@ -37,7 +37,7 @@ function createCacheGraph(parser, sign, opts) {
     nextg: false
   }, opts);
 
-  var loadPromise = Promise.resolve(copts.g);
+  var loadPromise = Promise.resolve(copts);
 
   if (copts.persistence && !opts.g) {
     loadPromise = loadFile(copts.persistence).then(function (_ref) {
