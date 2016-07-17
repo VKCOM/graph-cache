@@ -18,6 +18,7 @@
     "mocha": "^2.5.3"
   },
   "dependencies": {
+    "derivable": "^0.12.1",
     "graphlib": "^2.1.0",
     "lodash.difference": "^4.3.0",
     "lodash.differenceby": "^4.6.0",
