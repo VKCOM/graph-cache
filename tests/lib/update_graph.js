@@ -160,7 +160,7 @@ describe('updateGraph', () => {
       const source = path.join(fixtureDir, 'graph.json');
       const subgraph = path.join(fixtureDir, 'subgraph.json');
       const expected = path.join(fixtureDir, 'expected.json');
-      return Promise.all([source, subgraph, expected].map(loadFile))
+      return Promise.all([source, subgraph, expected].map((f) => loadFile(f)))
         .then(([[sf], [sbf], [ef]]) => {
           const g = json.read(JSON.parse(sf));
           const sg = json.read(JSON.parse(sbf));

@@ -1,5 +1,6 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const { json } = require('graphlib');
 
 const {
   verifyGraph,
@@ -10,7 +11,10 @@ const {
   compareGraphs,
   getName,
   loadTestFile,
+  testGraph,
 } = require('../utils/test_utils');
+const MemoryFileSystem = require('memory-fs');
+const mfs = new MemoryFileSystem();
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -52,15 +56,18 @@ describe('Cache module', () => {
 
   describe('#swapGraphs', () => {
     it('swaps old and next graph', () =>
-      load2Graph().then(nwg =>
-        createCacheGraph({}, testSign, {
+      load2Graph().then(nwg => {
+        const lp = createCacheGraph({}, testSign, {
           next: nwg,
-        }).then(cache => {
+        });
+        lp.then(cache => {
           verifyGraph(cache._exposeGraph(), [], []);
           cache.swapGraphs();
+        });
+        return lp.then(cache => {
           compareGraphs(cache._exposeGraph(), nwg);
-        })
-      )
+        });
+      })
     );
 
     it('not changes graph is next graph is empty', () =>
@@ -125,6 +132,44 @@ describe('Cache module', () => {
             getName(1),
             getName(3),
           ]));
+        })
+      )
+    );
+  });
+
+  describe('#saveGraph', () => {
+    it('saves graph to fs', () =>
+      load3Graph().then(nwg =>
+        createCacheGraph({}, testSign, {
+          g: nwg,
+          persistence: '/test.json',
+          targetFs: mfs,
+        }).then(cache =>
+          cache.saveGraph(mfs)
+        ).then(() => {
+          const gf = mfs.readFileSync('/test.json');
+          const g = json.read(JSON.parse(gf.toString()));
+          compareGraphs(g, nwg);
+        })
+      )
+    );
+  });
+
+  describe('#rebuildFromFile', () => {
+    it('adds subgraph to empty graph', () =>
+      loadTestFile('1.txt').then(([file, name]) =>
+        load3Graph().then(nwg => {
+          nwg.removeEdge(getName(2), getName(3));
+          nwg.setEdge(getName(3), getName(2));
+          const gf = createCacheGraph(() => Promise.resolve(nwg), testSign, {});
+          return gf.then(cache => cache.rebuildFromFile(file, name))
+          .then(() => gf)
+          .then(cache => {
+            const next = cache._exposeNextGraph();
+            const g = cache._exposeGraph();
+            compareGraphs(g, testGraph());
+            compareGraphs(next, nwg);
+          });
         })
       )
     );
