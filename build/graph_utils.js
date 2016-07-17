@@ -16,7 +16,7 @@ function getDepencies(g, nodes, acc) {
 
 function getDependantLeafs(g, nodes, acc) {
   var newNodes = nodes.reduce(function (nacc, node) {
-    return nacc.concat(g.successors(node));
+    return nacc.concat(g.successors(node) || []);
   }, []);
   if (newNodes.length === 0) {
     return uniq(acc);
