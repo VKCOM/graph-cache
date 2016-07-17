@@ -72,17 +72,19 @@ describe('getDepencies', () => {
 describe('getDependantLeafs', () => {
   it('returns empty array, if node doesn\'t exist', () => {
     const g = testGraph();
-    expect(getDependantLeafs(g, [1], [])).to.eql([]);
+    expect(getDependantLeafs(g, [1], [])).to.eql([1]);
   });
 
   it('returns empty array if node has no deps', () => {
     const g = get1Graph();
-    expect(getDependantLeafs(g, ['1'], ['1'])).to.eql(['1']);
+    expect(getDependantLeafs(g, ['1'], [])).to.eql(['1']);
   });
 
   it('returns deps from leaf with 1 dep', () => {
     const g = get2Graph();
-    expect(getDependantLeafs(g, [2], [])).to.eql(['1']);
+    g.setNode(3);
+    g.setEdge(2, 3);
+    expect(getDependantLeafs(g, [2], [])).to.eql(['1', '3']);
   });
 
   it('returns deps from leaf with 2 deps', () => {
@@ -92,11 +94,11 @@ describe('getDependantLeafs', () => {
 
   it('returns deps from leaf with 2 layers of deps', () => {
     const g = get4Graph();
-    expect(getDependantLeafs(g, [4], []).sort()).to.eql(['1', '3']);
+    expect(getDependantLeafs(g, [4], []).sort()).to.eql(['1']);
   });
 
   it('returns deps for full graph', () => {
     const g = getFullGraph();
-    expect(getDependantLeafs(g, [4], []).sort()).to.eql(['1', '3', '5']);
+    expect(getDependantLeafs(g, [4], []).sort()).to.eql(['1']);
   });
 });

@@ -10,6 +10,7 @@ const {
   load2Graph,
   getName,
   loadFiles,
+  compareGraphs,
 } = require('../utils/test_utils');
 const { loadFile } = require('../../lib/file_process');
 const fs = require('fs');
@@ -17,7 +18,6 @@ const path = require('path');
 const { json } = require('graphlib');
 
 chai.use(chaiAsPromised);
-const { assert } = chai;
 
 const { updateGraph } = require('../../lib/update_graph');
 
@@ -153,15 +153,6 @@ describe('updateGraph', () => {
   );
 
   const fixturesDir = 'tests/fixtures/cases';
-
-  function compareGraphs(g, nwg) {
-    const nodes1 = g.nodes().sort().map(node => [node, g.node(node)]);
-    const nodes2 = nwg.nodes().sort().map(node => [node, g.node(node)]);
-    const edges1 = g.edges().sort((a, b) => a.v <= b.v);
-    const edges2 = nwg.edges().sort((a, b) => a.v <= b.v);
-    assert.deepEqual(nodes1, nodes2, 'nodes are equal');
-    assert.deepEqual(edges1, edges2, 'edges are equal');
-  }
 
   fs.readdirSync(fixturesDir).forEach(caseName => {
     it(`should ${caseName.replace(/-/ig, ' ')}`, () => {

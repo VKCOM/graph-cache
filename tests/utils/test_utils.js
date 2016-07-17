@@ -1,6 +1,6 @@
 const Graph = require('graphlib').Graph;
 const { loadFile } = require('../../lib/file_process');
-const { expect } = require('chai');
+const { expect, assert } = require('chai');
 
 function testSign(file) {
   return file.length;
@@ -22,6 +22,7 @@ function testGraph() {
 function verifyGraph(g, vertexList, edgeList = []) {
   const nodes = g.nodes().sort().map(node => [node, g.node(node)]);
   const edges = g.edges().sort((a, b) => a.v <= b.v);
+
   expect(nodes).to.eql(vertexList.sort());
   expect(edges).to.eql(edgeList.sort((a, b) => a.v <= b.v));
 }
@@ -86,6 +87,15 @@ function load4Graph(info = false) {
   );
 }
 
+function compareGraphs(g, nwg) {
+  const nodes1 = g.nodes().sort().map(node => [node, g.node(node)]);
+  const nodes2 = nwg.nodes().sort().map(node => [node, g.node(node)]);
+  const edges1 = g.edges().sort((a, b) => a.v <= b.v);
+  const edges2 = nwg.edges().sort((a, b) => a.v <= b.v);
+  assert.deepEqual(nodes1, nodes2, 'nodes are equal');
+  assert.deepEqual(edges1, edges2, 'edges are equal');
+}
+
 module.exports = {
   loadTestFile,
   testSign,
@@ -98,4 +108,5 @@ module.exports = {
   load2Graph,
   getName,
   loadFiles,
+  compareGraphs,
 };
