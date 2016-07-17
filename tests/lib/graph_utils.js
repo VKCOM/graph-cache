@@ -70,6 +70,12 @@ describe('getDepencies', () => {
 });
 
 describe('getDependantLeafs', () => {
+
+  it('returns empty array, if node doesn\'t exist', () => {
+    const g = testGraph();
+    expect(getDependantLeafs(g, [1], [])).to.eql([]);
+  });
+
   it('returns empty array if node has no deps', () => {
     const g = get1Graph();
     expect(getDependantLeafs(g, [1], [])).to.eql([]);
