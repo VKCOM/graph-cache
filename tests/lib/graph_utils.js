@@ -78,7 +78,7 @@ describe('getDependantLeafs', () => {
 
   it('returns empty array if node has no deps', () => {
     const g = get1Graph();
-    expect(getDependantLeafs(g, [1], [])).to.eql([]);
+    expect(getDependantLeafs(g, ['1'], ['1'])).to.eql(['1']);
   });
 
   it('returns deps from leaf with 1 dep', () => {

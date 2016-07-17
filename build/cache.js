@@ -70,7 +70,7 @@ function createCacheGraph(parser, sign, opts) {
       },
       getChangedLeafs: function getChangedLeafs(file, filename) {
         return checkFileCache(gopts.g, sign, file, filename).then(function (changed) {
-          return getDependantLeafs(gopts.g, changed, []);
+          return getDependantLeafs(gopts.g, changed, changed);
         });
       },
       saveGraph: function saveGraph() {
