@@ -17,7 +17,7 @@ function ensureConnectivity(g, nwg, leafs) {
     return g;
   }
 
-  return ensureConnectivity(g, nextCheck);
+  return ensureConnectivity(g, nwg, nextCheck);
 }
 
 function updateEdges(g, nwg, leaf) {
