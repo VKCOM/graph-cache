@@ -115,6 +115,7 @@ function createCacheGraph(parser, sign, opts) {
       },
       swapGraphs: function swapGraphs() {
         if (gatom.get().next) {
+          globalGraph = gatom.get().next;
           gatom.set(assign(gatom.get(), {
             g: gatom.get().next,
             next: false
