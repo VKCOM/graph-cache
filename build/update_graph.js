@@ -7,7 +7,7 @@ var diff = require('lodash.differenceby');
 function ensureConnectivity(g, nwg, leafs) {
   var nextCheck = [];
   leafs.forEach(function (leaf) {
-    nextCheck = nextCheck.concat(g.predecessors(leaf));
+    nextCheck = nextCheck.concat(g.predecessors(leaf) || []);
     if (!nwg.node(leaf) && g.successors(leaf).length === 0) {
       g.removeNode(leaf);
     }
@@ -43,7 +43,7 @@ function walkTogether(nwg, g, leafs) {
     var parent = _ref2[1];
 
     var curPred = nwg.predecessors(leaf) || [];
-    var oldPred = g.predecessors(leaf);
+    var oldPred = g.predecessors(leaf) || [];
     nextLeafs = nextLeafs.concat(curPred.map(function (el) {
       return [el, leaf];
     }));
