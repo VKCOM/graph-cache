@@ -2,9 +2,9 @@
 
 var fs = require('fs');
 
-function loadFile(fname) {
+function loadFile(fname, targetFs) {
   return new Promise(function (resolve, reject) {
-    fs.readFile(fname, function (error, file) {
+    (targetFs || fs).readFile(fname, function (error, file) {
       if (error) {
         reject(error);
       } else {
