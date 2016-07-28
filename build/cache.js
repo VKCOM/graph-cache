@@ -49,7 +49,8 @@ function createCacheGraph(parser, sign, opts) {
     persistence: undefined,
     g: new Graph({ directed: true }),
     next: false,
-    targetFs: fs
+    targetFs: fs,
+    cacheVersion: false
   }, opts);
 
   if (copts.globalCache) {
@@ -64,7 +65,9 @@ function createCacheGraph(parser, sign, opts) {
       var file = _ref2[0];
 
       var gjson = JSON.parse(file.toString());
-      copts.g = json.read(gjson);
+      if (copts.cacheVersion === false || gjson.cacheVersion === copts.cacheVersion) {
+        copts.g = json.read(gjson.graph);
+      }
       return { gatom: atom(copts) };
     }).catch(function () {
       console.warn('Couldn\'t load graph from file:', copts.persistence);
@@ -100,7 +103,10 @@ function createCacheGraph(parser, sign, opts) {
       saveGraph: function saveGraph() {
         if (gatom.get().persistence) {
           return new Promise(function (resolve, reject) {
-            var serialized = JSON.stringify(json.write(gatom.get().g));
+            var serialized = JSON.stringify({
+              graph: json.write(gatom.get().g),
+              cacheVersion: copts.cacheVersion
+            });
             gatom.get().targetFs.writeFile(gatom.get().persistence, serialized, function (err) {
               if (err) {
                 reject(err);
