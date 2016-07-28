@@ -29,6 +29,32 @@ describe('Cache module', () => {
       expect(cache).to.eventually.be.an('object');
     });
 
+    it('ignores persistent cache if cacheVersion is different', () => {
+      const cachep = createCacheGraph({}, testSign, {
+        persistence: 'tests/fixtures/graph_v.json',
+        cacheVersion: 2,
+      });
+
+      return cachep.then(cache => {
+        const g = cache._exposeGraph();
+        verifyGraph(g, [], []);
+      });
+    });
+
+    it('loads if persitence is set and cacheVersion is the same', () => {
+      const cachep = createCacheGraph({}, testSign, {
+        persistence: 'tests/fixtures/graph_v.json',
+        cacheVersion: 1,
+      });
+
+      return cachep.then(cache => {
+        const g = cache._exposeGraph();
+        return load4Graph().then(nwg => {
+          compareGraphs(g, nwg);
+        });
+      });
+    });
+
     it('loads if persitence is set', () => {
       const cachep = createCacheGraph({}, testSign, {
         persistence: 'tests/fixtures/graph.json',
@@ -144,11 +170,14 @@ describe('Cache module', () => {
           g: nwg,
           persistence: '/test.json',
           targetFs: mfs,
+          cacheVersion: 15,
         }).then(cache =>
           cache.saveGraph(mfs)
         ).then(() => {
           const gf = mfs.readFileSync('/test.json');
-          const g = json.read(JSON.parse(gf.toString()));
+          const gjson = JSON.parse(gf.toString());
+          const g = json.read(gjson.graph);
+          expect(gjson.cacheVersion).to.equal(15);
           compareGraphs(g, nwg);
         })
       )
