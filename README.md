@@ -1,6 +1,6 @@
 # graph-cache
 
-This library provides easy way to build and maintain dependency graph for any type of files/languges.
+This library provides easy way to build and maintain persistent dependency graph for any type of files/languges.
 It provides a high-level set of operations on graph to fulfill common use cases, when working with dependency graphs.
 
 ```graph-cache``` is language agnostic, you can provide a parser for any type of files (JS, LESS, SASS, etc).
