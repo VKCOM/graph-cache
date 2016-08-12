@@ -34,6 +34,9 @@ const gcache = createGraphCache(parser, sign, opts);
 ```javascript
 parser(sign, file, filename)
 ```
+
+```Parser``` function should return ```Promise``` that resolves into full dependecy graph of given file as an instance of ```graphlib``` graph. Example of parser function is [graph-cache-less](https://github.com/VKCOM/graph-cache-less).
+
 - sign — sign function, which takes ```Buffer``` and returns string (hash), that identifies this file, i.e. md5.
 - opts — options object
 ```javascript
