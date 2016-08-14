@@ -7,6 +7,15 @@ It provides a high-level set of operations on graph to fulfill common use cases,
 
 This library is built on top of the [graphlib](https://github.com/cpettitt/graphlib) npm package.
 
+## Use cases
+
+The simplest use case is if you want to build persistent cache for some language that supports importing files from other files.
+
+The reason I created it was that I needed to build persitent cache for ```LESS``` language.
+
+Project I was working on consisted of hundreds of files, and I wanted to 
+recompile only those that changed while deploying code.
+
 ## Installation
 
 ```npm install --save graph-cache```
