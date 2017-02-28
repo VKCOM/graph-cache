@@ -87,6 +87,13 @@ function load4Graph(info = false) {
   );
 }
 
+function loadCyclicGraph() {
+  return load2Graph().then((g) => {
+    g.setEdge(getName(1), getName(2));
+    return g;
+  });
+}
+
 function compareGraphs(g, nwg) {
   const nodes1 = g.nodes().sort().map(node => [node, g.node(node)]);
   const nodes2 = nwg.nodes().sort().map(node => [node, g.node(node)]);
@@ -109,4 +116,5 @@ module.exports = {
   getName,
   loadFiles,
   compareGraphs,
+  loadCyclicGraph,
 };

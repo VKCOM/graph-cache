@@ -11,6 +11,7 @@ const {
   getName,
   loadFiles,
   compareGraphs,
+  loadCyclicGraph
 } = require('../utils/test_utils');
 const { loadFile } = require('../../lib/file_process');
 const fs = require('fs');
@@ -142,6 +143,15 @@ describe('updateGraph', () => {
           ]
         )
       )
+    )
+  );
+
+  it('handles cyclic graphs', () =>
+    load2Graph().then(g =>
+      loadCyclicGraph().then(gg => {
+        return updateGraph(g, testSign, loadCyclicGraph, '', getName(1))
+          .then(nwg => compareGraphs(nwg, gg))
+      })
     )
   );
 
