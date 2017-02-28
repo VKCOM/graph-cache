@@ -1,6 +1,6 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const { loadTestFile, testSign, testGraph } = require('../utils/test_utils');
+const { loadTestFile, testSign, testGraph, loadCyclicGraph } = require('../utils/test_utils');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -26,6 +26,21 @@ describe('checkFileCache', () => {
     })
   );
 
+  it('can check cycle graphs not changed', () =>
+    loadCyclicGraph(true).then(([g, files, names]) => {
+      return expect(checkFileCache(g, testSign, files[0], names[0]))
+        .eventually.eql([]);
+    })
+  );
+
+
+  it('can check cycle graphs changed', () =>
+    loadCyclicGraph(true).then(([g, files, names]) => {
+      g.setNode(names[1], 2123);
+      return expect(checkFileCache(g, testSign, files[0], names[0]))
+        .eventually.eql([names[1]]);
+    })
+  );
 
   it('returns true if file has no deps and signatures match', () =>
     loadTestFile('1.txt').then(([file, filename]) => {

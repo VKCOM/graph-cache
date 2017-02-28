@@ -87,9 +87,12 @@ function load4Graph(info = false) {
   );
 }
 
-function loadCyclicGraph() {
-  return load2Graph().then((g) => {
+function loadCyclicGraph(info = false) {
+  return load2Graph(true).then(([g, files, names]) => {
     g.setEdge(getName(1), getName(2));
+    if (info) {
+      return [g, files, names];
+    }
     return g;
   });
 }

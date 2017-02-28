@@ -2,11 +2,14 @@
 
 var uniq = require('lodash.uniq');
 var diff = require('lodash.differenceby');
+var includes = require('lodash.includes');
 
 function getDepencies(g, nodes, acc) {
   var newNodes = nodes.reduce(function (nacc, node) {
     return nacc.concat(g.predecessors(node));
-  }, []);
+  }, []).filter(function (el) {
+    return !includes(acc, el);
+  });
 
   if (newNodes.length === 0) {
     return uniq(acc);

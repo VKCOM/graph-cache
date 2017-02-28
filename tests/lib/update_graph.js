@@ -149,7 +149,7 @@ describe('updateGraph', () => {
   it('handles cyclic graphs', () =>
     load2Graph().then(g =>
       loadCyclicGraph().then(gg => {
-        return updateGraph(g, testSign, loadCyclicGraph, '', getName(1))
+        return updateGraph(g, testSign, loadCyclicGraph.bind(null, false), '', getName(1))
           .then(nwg => compareGraphs(nwg, gg))
       })
     )
