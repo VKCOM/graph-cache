@@ -34,16 +34,16 @@ function updateEdges(g, nwg, leaf) {
   });
 }
 
-function walkTogether(nwg, g, leafs) {
+function walkTogether(nwg, g, leafs, walked) {
   var nextLeafs = [];
   leafs.forEach(function (_ref) {
-    var _ref2 = _slicedToArray(_ref, 2);
-
-    var leaf = _ref2[0];
-    var parent = _ref2[1];
+    var _ref2 = _slicedToArray(_ref, 2),
+        leaf = _ref2[0],
+        parent = _ref2[1];
 
     var curPred = nwg.predecessors(leaf) || [];
     var oldPred = g.predecessors(leaf) || [];
+    walked[leaf] = true;
     nextLeafs = nextLeafs.concat(curPred.map(function (el) {
       return [el, leaf];
     }));
@@ -67,15 +67,22 @@ function walkTogether(nwg, g, leafs) {
     }
   });
 
+  nextLeafs = nextLeafs.filter(function (_ref3) {
+    var _ref4 = _slicedToArray(_ref3, 1),
+        el = _ref4[0];
+
+    return !walked[el];
+  });
+
   if (nextLeafs.length === 0) {
     return g;
   }
-  return walkTogether(nwg, g, nextLeafs);
+  return walkTogether(nwg, g, nextLeafs, walked);
 }
 
 function updateGraph(g, sign, parse, file, filename) {
   return parse(sign, file, filename).then(function (nwg) {
-    return walkTogether(nwg, g, [[filename, null]], false);
+    return walkTogether(nwg, g, [[filename, null]], {});
   });
 }
 

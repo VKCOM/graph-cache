@@ -4,28 +4,23 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
-var _require = require('graphlib');
-
-var Graph = _require.Graph;
-var json = _require.json;
+var _require = require('graphlib'),
+    Graph = _require.Graph,
+    json = _require.json;
 
 var assign = require('object-assign');
 
-var _require2 = require('./check_file_cache');
+var _require2 = require('./check_file_cache'),
+    checkFileCache = _require2.checkFileCache;
 
-var checkFileCache = _require2.checkFileCache;
+var _require3 = require('./update_graph'),
+    updateGraph = _require3.updateGraph;
 
-var _require3 = require('./update_graph');
+var _require4 = require('./file_process'),
+    loadFile = _require4.loadFile;
 
-var updateGraph = _require3.updateGraph;
-
-var _require4 = require('./file_process');
-
-var loadFile = _require4.loadFile;
-
-var _require5 = require('./graph_utils');
-
-var getDependantLeafs = _require5.getDependantLeafs;
+var _require5 = require('./graph_utils'),
+    getDependantLeafs = _require5.getDependantLeafs;
 
 var fs = require('fs');
 
@@ -60,9 +55,8 @@ function createCacheGraph(parser, sign, opts) {
   var loadPromise = Promise.resolve({ gatom: atom(copts) });
   if (copts.persistence && !opts.g) {
     loadPromise = loadFile(copts.persistence, copts.targetFs).then(function (_ref) {
-      var _ref2 = _slicedToArray(_ref, 1);
-
-      var file = _ref2[0];
+      var _ref2 = _slicedToArray(_ref, 1),
+          file = _ref2[0];
 
       var gjson = JSON.parse(file.toString());
       if (copts.cacheVersion === false || gjson.cacheVersion === copts.cacheVersion) {
