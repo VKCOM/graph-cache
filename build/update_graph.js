@@ -4,10 +4,14 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var diff = require('lodash.differenceby');
 
-function ensureConnectivity(g, nwg, leafs) {
+function ensureConnectivity(g, nwg, leafs, processed) {
   var nextCheck = [];
   leafs.forEach(function (leaf) {
-    nextCheck = nextCheck.concat(g.predecessors(leaf) || []);
+    processed[leaf] = true;
+    nextCheck = nextCheck.concat(g.predecessors(leaf) || []).filter(function (el) {
+      return !processed[leaf];
+    });
+
     if (!nwg.node(leaf) && g.successors(leaf).length === 0) {
       g.removeNode(leaf);
     }
@@ -17,7 +21,7 @@ function ensureConnectivity(g, nwg, leafs) {
     return g;
   }
 
-  return ensureConnectivity(g, nwg, nextCheck);
+  return ensureConnectivity(g, nwg, nextCheck, processed);
 }
 
 function updateEdges(g, nwg, leaf) {
@@ -63,7 +67,7 @@ function walkTogether(nwg, g, leafs, walked) {
     }
     var diffPred = diff(oldPred, curPred);
     if (diffPred.length > 0) {
-      ensureConnectivity(g, nwg, diffPred);
+      ensureConnectivity(g, nwg, diffPred, {});
     }
   });
 

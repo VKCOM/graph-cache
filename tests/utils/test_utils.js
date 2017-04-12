@@ -87,12 +87,38 @@ function load4Graph(info = false) {
   );
 }
 
-function loadCyclicGraph(info = false) {
+function loadCyclicGraphSimple(info = false) {
   return load2Graph(true).then(([g, files, names]) => {
     g.setEdge(getName(1), getName(2));
     if (info) {
       return [g, files, names];
     }
+    return g;
+  });
+}
+
+function loadCyclicGraph(info = false) {
+  return load4Graph(true).then(([g, files, names]) => {
+    g.setEdge(getName(2), getName(4));
+    g.removeEdge(getName(2), getName(1));
+    g.setEdge(getName(1), getName(2));
+
+    if (info) {
+      return [g, files, names];
+    }
+    return g;
+  });
+}
+
+function loadCyclicGraphChange(info = false) {
+  return loadCyclicGraph(true).then(([g, files, names]) => {
+    g.removeNode(getName(2));
+    g.setEdge(getName(3), getName(4));
+    g.setEdge(getName(1), getName(3));
+    if (info) {
+      return [g, files, names];
+    }
+
     return g;
   });
 }
@@ -120,4 +146,6 @@ module.exports = {
   loadFiles,
   compareGraphs,
   loadCyclicGraph,
+  loadCyclicGraphChange,
+  loadCyclicGraphSimple,
 };
