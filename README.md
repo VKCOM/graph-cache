@@ -13,7 +13,7 @@ The simplest use case is if you want to build persistent cache for some language
 
 The reason I created it was that I needed to build persitent cache for ```LESS``` language.
 
-Project I was working on consisted of hundreds of files, and I wanted to 
+Project I was working on consisted of hundreds of files, and I wanted to
 recompile only those that changed while deploying code.
 
 ## Installation
@@ -53,7 +53,7 @@ parser(sign, file, filename)
   persistence: 'test.txt', // string, file name where graph will be stored
   g: new Graph({ directed: true }), // initial graph, ignored if persistence is set
   targetFs: fs, // if you want to store graph in memory for some reasons
-  cacheVersion: false, // this is the version, that should match the version stored in cache file, 
+  cacheVersion: false, // this is the version, that should match the version stored in cache file,
                        //if differs, cache will be discarded
 }
 ```
@@ -103,6 +103,14 @@ This is a way of ```commiting``` changes to your dependency graph.
 
 Returns null
 
+#### visualise(dest)
+
+This method will create HTML-file with your dependency graph visualisation.
+
+- dest — destination for saving file with visualisation
+
+Returns ```Promise```
+
 ## Testing
 
 This library is tested using ```Mocha``` and ```Chai```. You can run test suit with ```npm test```.
@@ -110,6 +118,6 @@ You can run ```npm run test-watch``` to rerun tests on file updates.
 
 ## Contributing
 
-This library is written using ES6 code. 
+This library is written using ES6 code.
 Before pushing run ```npm run build``` to generate ES5 compatible js code.
-Issues and PR's are welcomed here. 
+Issues and PR's are welcomed here.
