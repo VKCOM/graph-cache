@@ -1,0 +1,52 @@
+<html class="">
+<head>
+<link rel="stylesheet prefetch" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<style type="text/css" class="cp-pen-styles">html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+#cy {
+  height: 100vh;
+  display: block;
+  background-color: #eee;
+}
+</style></head>
+<body>
+<div id="cy"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.7.8/cytoscape.min.js"></script>
+<script src="https://cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js"></script>
+<script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.5.0/cytoscape-dagre.js"></script>
+<script>var cy = cytoscape({
+  container: document.getElementById('cy'), // container to render in
+
+	elements: --placeholder--,
+
+  style: [{
+  	selector: 'node',
+  	style: {
+  		'content': 'data(id)',
+  		'text-opacity': 0.5,
+  		'text-valign': 'center',
+  		'text-halign': 'right',
+  		'background-color': '#11479e'
+  	}
+  }, {
+  	selector: 'edge',
+  	style: {
+  		'width': 1,
+  		'target-arrow-shape': 'triangle',
+  		'line-color': '#9dbaea',
+  		'target-arrow-color': '#9dbaea',
+  		'curve-style': 'bezier'
+    }
+	}],
+
+  layout: {
+    name: 'dagre'
+  }
+});
+</script>
+</body>
+</html>

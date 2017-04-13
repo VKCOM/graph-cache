@@ -23,6 +23,7 @@ var _require5 = require('./graph_utils'),
     getDependantLeafs = _require5.getDependantLeafs;
 
 var fs = require('fs');
+var path = require('path');
 
 function atom(value) {
   var closure = value;
@@ -38,6 +39,28 @@ function atom(value) {
 }
 
 var globalGraph = new Graph({ directed: true });
+
+function toCytoGraph(gatom) {
+  var g = gatom.get().g;
+  var nodes = g.nodes().map(function (node) {
+    return {
+      data: {
+        id: node
+      }
+    };
+  });
+  var edges = g.edges().map(function (edge) {
+    return {
+      data: {
+        id: edge.v + '_' + edge.w,
+        source: edge.v,
+        target: edge.w
+      }
+    };
+  });
+
+  return nodes.concat(edges);
+}
 
 function createCacheGraph(parser, sign, opts) {
   var copts = assign({}, {
@@ -93,6 +116,32 @@ function createCacheGraph(parser, sign, opts) {
         return checkFileCache(gatom.get().g, sign, file, filename).then(function (changed) {
           return getDependantLeafs(gatom.get().g, changed, []);
         });
+      },
+      visualise: function visualise(dest) {
+        var cytoGraph = toCytoGraph(gatom);
+        return new Promise(function (res, rej) {
+          fs.readFile(path.join(__dirname, '../visual.html'), function (err, data) {
+            if (err) {
+              rej(err);
+            }
+
+            res(data.toString());
+          });
+        }).then(function (content) {
+          return content.replace('--placeholder--', JSON.stringify(cytoGraph));
+        }).then(function (writeContent) {
+          return new Promise(function (res, rej) {
+            fs.writeFile(dest, writeContent, function (err) {
+              if (err) {
+                rej(err);
+              }
+              res();
+            });
+          });
+        });
+      },
+      _toCytoScape: function _toCytoScape() {
+        return toCytoGraph(gatom);
       },
       saveGraph: function saveGraph() {
         if (gatom.get().persistence) {

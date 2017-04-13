@@ -1,4 +1,4 @@
-const Graph = require('graphlib').Graph;
+const { Graph, json } = require('graphlib');
 const { loadFile } = require('../../lib/file_process');
 const { expect, assert } = require('chai');
 
@@ -123,6 +123,13 @@ function loadCyclicGraphChange(info = false) {
   });
 }
 
+function loadBigGraph() {
+  return loadTestFile('cases/merge-two-subgraphs/expected.json')
+    .then(([data]) => {
+      return json.read(JSON.parse(data.toString()));
+    });
+}
+
 function compareGraphs(g, nwg) {
   const nodes1 = g.nodes().sort().map(node => [node, g.node(node)]);
   const nodes2 = nwg.nodes().sort().map(node => [node, g.node(node)]);
@@ -148,4 +155,5 @@ module.exports = {
   loadCyclicGraph,
   loadCyclicGraphChange,
   loadCyclicGraphSimple,
+  loadBigGraph,
 };

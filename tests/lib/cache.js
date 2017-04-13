@@ -12,9 +12,11 @@ const {
   getName,
   loadTestFile,
   testGraph,
+  loadBigGraph,
 } = require('../utils/test_utils');
 const MemoryFileSystem = require('memory-fs');
 const mfs = new MemoryFileSystem();
+const fs = require('fs');
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -184,6 +186,44 @@ describe('Cache module', () => {
     );
   });
 
+  describe('#visualise', () => {
+    it('generates cytoscape format for given graph', () =>
+      load2Graph().then(nwg => {
+        const gf = createCacheGraph({}, testSign, { g: nwg });
+        return gf.then((cache) => {
+          expect(cache._toCytoScape()).to.eql([
+            { data: { id: 'tests/fixtures/1.txt' } },
+            { data: { id: 'tests/fixtures/2.txt' } },
+            { data: {
+              id: 'tests/fixtures/2.txt_tests/fixtures/1.txt',
+              source: 'tests/fixtures/2.txt',
+              target: 'tests/fixtures/1.txt' } }
+          ]);
+        });
+      })
+    );
+
+    it('generates html file with cytoscape', () =>
+      loadBigGraph().then(nwg => {
+        const gf = createCacheGraph({}, testSign, { g: nwg });
+        return gf.then((cache) => {
+          return cache.visualise('tests/fixtures/visual.html').then(() => {
+            return new Promise((res, rej) => {
+              fs.readFile('tests/fixtures/visual.html', (err, data) => {
+                if (err) {
+                  rej(err);
+                }
+                res(data.toString().length);
+              });
+            }).then((len) => {
+              expect(len).to.be.gte(0);
+            });
+          });
+        });
+      })
+    );
+  });
+
   describe('#rebuildFromFile', () => {
     it('adds subgraph to empty graph', () =>
       loadTestFile('1.txt').then(([file, name]) =>
@@ -192,13 +232,13 @@ describe('Cache module', () => {
           nwg.setEdge(getName(3), getName(2));
           const gf = createCacheGraph(() => Promise.resolve(nwg), testSign, {});
           return gf.then(cache => cache.rebuildFromFile(file, name))
-          .then(() => gf)
-          .then(cache => {
-            const next = cache._exposeNextGraph();
-            const g = cache._exposeGraph();
-            compareGraphs(g, testGraph());
-            compareGraphs(next, nwg);
-          });
+            .then(() => gf)
+            .then(cache => {
+              const next = cache._exposeNextGraph();
+              const g = cache._exposeGraph();
+              compareGraphs(g, testGraph());
+              compareGraphs(next, nwg);
+            });
         })
       )
     );
