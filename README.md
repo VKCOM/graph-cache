@@ -1,6 +1,6 @@
 # graph-cache
 
-This library provides easy way to build and maintain persistent dependency graph for any type of files/languges.
+This library provides easy way to build and maintain persistent dependency graph for any type of files/languages.
 It provides a high-level set of operations on graph to fulfill common use cases, when working with dependency graphs.
 
 ```graph-cache``` is language agnostic, you can provide a parser for any type of files (JS, LESS, SASS, etc).
@@ -11,7 +11,7 @@ This library is built on top of the [graphlib](https://github.com/cpettitt/graph
 
 The simplest use case is if you want to build persistent cache for some language that supports importing files from other files.
 
-The reason I created it was that I needed to build persitent cache for ```LESS``` language.
+The reason I created it was that I needed to build persistent cache for ```LESS``` language.
 
 Project I was working on consisted of hundreds of files, and I wanted to
 recompile only those that changed while deploying code.
@@ -44,7 +44,7 @@ const gcache = createGraphCache(parser, sign, opts);
 parser(sign, file, filename)
 ```
 
-```Parser``` function should return ```Promise``` that resolves into full dependecy graph of given file as an instance of ```graphlib``` graph. Example of parser function is [graph-cache-less](https://github.com/VKCOM/graph-cache-less).
+```Parser``` function should return ```Promise``` that resolves into full dependency graph of given file as an instance of ```graphlib``` graph. Example of parser function is [graph-cache-less](https://github.com/VKCOM/graph-cache-less).
 
 - sign — sign function, which takes ```Buffer``` and returns string (hash), that identifies this file, i.e. md5.
 - opts — options object
@@ -71,11 +71,11 @@ This method allows tou to check whether this file or its deps has changed.
 - file — ```Buffer``` with file contents
 - filename — file name
 
-Returns ```Promise``` that will reolve into false if file or its dependecies has changed, otherwise it will be resolved into true.
+Returns ```Promise``` that will resolve into false if file or its dependencies has changed, otherwise it will be resolved into true.
 
 #### rebuildFromFile(file, filename)
 
-This method allows you to update your cache with file and its dependecy subgraph and merge it to existing graph.
+This method allows you to update your cache with file and its dependency subgraph and merge it to existing graph.
 Changes won't take effect until you call ```swapGraphs```.
 
 - file — ```Buffer``` with file contents
@@ -99,7 +99,7 @@ Returns ```Promise``` when saving is done.
 #### swapGraphs()
 
 When you call ```rebuildFromFile``` resulting graph is not yet used, until you call this method.
-This is a way of ```commiting``` changes to your dependency graph.
+This is a way of ```committing``` changes to your dependency graph.
 
 Returns null
 
